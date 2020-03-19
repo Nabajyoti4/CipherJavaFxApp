@@ -1,0 +1,9 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="CipherApp:jar">
+    <output-path>$PROJECT_DIR$/out/artifacts/CipherApp_jar</output-path>
+    <root id="archive" name="CipherApp.jar">
+      <element id="module-output" name="CipherApp" />
+      <element id="artifact" artifact-name="CipherApp" />
+    </root>
+  </artifact>
+</component>
