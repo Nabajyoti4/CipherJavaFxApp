@@ -6,69 +6,116 @@
 <?import javafx.scene.control.TextArea?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.control.ToggleGroup?>
+<?import javafx.scene.effect.Blend?>
 <?import javafx.scene.layout.AnchorPane?>
-<?import javafx.scene.layout.ColumnConstraints?>
-<?import javafx.scene.layout.GridPane?>
-<?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.text.Font?>
 
-<GridPane alignment="center" hgap="10" vgap="10" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sample.Controller">
-   <columnConstraints>
-      <ColumnConstraints maxWidth="165.0" minWidth="0.0" prefWidth="0.0" />
-      <ColumnConstraints maxWidth="1136.0" minWidth="971.0" prefWidth="1136.0" />
-   </columnConstraints>
-   <rowConstraints>
-      <RowConstraints />
-   </rowConstraints>
+<AnchorPane style="-fx-background-radius: 15;" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sample.Controller">
    <children>
-      <AnchorPane prefHeight="708.0" prefWidth="1136.0" style="-fx-background-color: #1d4d4f;" GridPane.columnIndex="1">
+      <AnchorPane layoutX="10.0" layoutY="10.0" prefHeight="700.0" prefWidth="1136.0" style="-fx-background-color: #FAFAFA; -fx-background-radius: 15;">
          <children>
-            <Label layoutX="364.0" layoutY="25.0" prefHeight="40.0" prefWidth="409.0" text="CIPHER APPLICATION" textFill="WHITE">
+            <Button fx:id="enbtn" layoutX="508.0" layoutY="390.0" mnemonicParsing="false" onAction="#enbtn" prefHeight="31.0" prefWidth="120.0" style="-fx-background-color: #BA68C8;" text="Encrypt" textFill="WHITE">
                <font>
-                  <Font name="Britannic Bold" size="38.0" />
+                  <Font name="Cambria Bold" size="19.0" />
                </font>
-            </Label>
-            <Button fx:id="enbtn" layoutX="508.0" layoutY="390.0" mnemonicParsing="false" onAction="#enbtn" prefHeight="31.0" prefWidth="120.0" style="-fx-background-color: green;" text="ENCRYPT" textFill="WHITE">
+               <effect>
+                  <Blend />
+               </effect>
+            </Button>
+            <Button fx:id="debtn" layoutX="880.0" layoutY="386.0" mnemonicParsing="false" onAction="#debtn" prefHeight="31.0" prefWidth="120.0" style="-fx-background-color: #BA68C8;" text="Decrypt" textFill="WHITE">
                <font>
-                  <Font name="Britannic Bold" size="19.0" />
+                  <Font name="Cambria Bold" size="20.0" />
                </font>
             </Button>
-            <Button fx:id="debtn" layoutX="880.0" layoutY="386.0" mnemonicParsing="false" onAction="#debtn" prefHeight="31.0" prefWidth="120.0" text="DECRYPT">
+            <TextArea fx:id="enText" editable="false" layoutX="417.0" layoutY="434.0" prefHeight="236.0" prefWidth="337.0" promptText="Encrypted Text" style="-fx-background-radius: 10;" wrapText="true">
                <font>
-                  <Font name="Britannic Bold" size="20.0" />
+                  <Font size="21.0" />
                </font>
-            </Button>
-            <TextArea fx:id="enText" layoutX="417.0" layoutY="434.0" prefHeight="236.0" prefWidth="337.0" wrapText="true" />
-            <TextArea fx:id="detext" layoutX="785.0" layoutY="434.0" prefHeight="236.0" prefWidth="324.0" wrapText="true" />
-            <TextField fx:id="pltext" alignment="TOP_LEFT" layoutX="42.0" layoutY="437.0" prefHeight="236.0" prefWidth="337.0" />
-            <TextField fx:id="keytext" editable="false" layoutX="411.0" layoutY="305.0" prefHeight="40.0" prefWidth="337.0" />
-            <Label layoutX="407.0" layoutY="259.0" prefHeight="21.0" prefWidth="324.0" text="Enter Key" textFill="WHITE">
+            </TextArea>
+            <TextArea fx:id="detext" editable="false" layoutX="785.0" layoutY="434.0" prefHeight="236.0" prefWidth="324.0" promptText="Decrypted Text" style="-fx-background-radius: 15;" wrapText="true">
+               <font>
+                  <Font size="21.0" />
+               </font>
+            </TextArea>
+            <TextField fx:id="pltext" alignment="TOP_LEFT" editable="false" layoutX="42.0" layoutY="437.0" prefHeight="236.0" prefWidth="337.0" promptText="Plain text here" style="-fx-background-radius: 10;">
+               <font>
+                  <Font size="21.0" />
+               </font>
+            </TextField>
+            <TextField fx:id="keytext" editable="false" layoutX="411.0" layoutY="305.0" prefHeight="40.0" prefWidth="337.0" promptText="Enter key Here" style="-fx-background-radius: 10;">
+               <font>
+                  <Font size="20.0" />
+               </font>
+            </TextField>
+            <Label layoutX="407.0" layoutY="259.0" prefHeight="21.0" prefWidth="324.0" text="Enter Key">
                <font>
                   <Font name="Bell MT Bold" size="26.0" />
                </font>
             </Label>
-            <Label layoutX="42.0" layoutY="391.0" text="Enter Plain Text" textFill="WHITE">
+            <Label layoutX="42.0" layoutY="391.0" text="Enter Plain Text">
                <font>
                   <Font name="Bell MT Bold" size="25.0" />
                </font>
             </Label>
-            <RadioButton fx:id="hill" layoutX="444.0" layoutY="159.0" mnemonicParsing="false" onAction="#cipher" text="Hill CIpher" textFill="WHITE">
+            <RadioButton fx:id="hill" layoutX="407.0" layoutY="180.0" mnemonicParsing="false" onAction="#cipher" text="Hill CIpher">
                <toggleGroup>
-                  <ToggleGroup fx:id="ciphers" />
+                  <ToggleGroup fx:id="ciphers1" />
                </toggleGroup>
-            </RadioButton>
-            <RadioButton fx:id="play" layoutX="228.0" layoutY="159.0" mnemonicParsing="false" onAction="#cipher" text="Play Fair Cipher" textFill="WHITE" toggleGroup="$ciphers" />
-            <RadioButton fx:id="vign" layoutX="785.0" layoutY="159.0" mnemonicParsing="false" onAction="#cipher" text="Vignere Cipher" textFill="WHITE" toggleGroup="$ciphers" />
-            <RadioButton fx:id="vern" layoutX="615.0" layoutY="159.0" mnemonicParsing="false" onAction="#cipher" text="Vernam Cipher" textFill="WHITE" toggleGroup="$ciphers" />
-            <Label layoutX="29.0" layoutY="123.0" />
-            <Label layoutX="474.0" layoutY="108.0" text="Select Cipher" textFill="WHITE">
                <font>
-                  <Font name="Bell MT Bold" size="25.0" />
+                  <Font name="System Bold" size="19.0" />
+               </font>
+            </RadioButton>
+            <RadioButton fx:id="play" layoutX="168.0" layoutY="180.0" mnemonicParsing="false" onAction="#cipher" text="Play Fair Cipher" textFill="#1a1a1a" toggleGroup="$ciphers1">
+               <font>
+                  <Font name="System Bold" size="19.0" />
+               </font>
+            </RadioButton>
+            <RadioButton fx:id="vign" layoutX="820.0" layoutY="180.0" mnemonicParsing="false" onAction="#cipher" text="Vignere Cipher" toggleGroup="$ciphers1">
+               <font>
+                  <Font name="System Bold" size="19.0" />
+               </font>
+            </RadioButton>
+            <RadioButton fx:id="vern" layoutX="605.0" layoutY="180.0" mnemonicParsing="false" onAction="#cipher" text="Vernam Cipher" toggleGroup="$ciphers1">
+               <font>
+                  <Font name="System Bold" size="19.0" />
+               </font>
+            </RadioButton>
+            <Label layoutX="29.0" layoutY="123.0" />
+            <Label layoutX="463.0" layoutY="124.0" text="Select Cipher" textFill="#9e0885">
+               <font>
+                  <Font name="Berlin Sans FB Bold" size="34.0" />
                </font>
             </Label>
-            <Button fx:id="valikey" layoutX="802.0" layoutY="310.0" mnemonicParsing="false" onAction="#validate" text="Validate Key" />
-            <Button fx:id="clear" layoutX="50.0" layoutY="310.0" mnemonicParsing="false" onAction="#clearAll" text="CLEAR" />
+            <Button fx:id="valikey" layoutX="773.0" layoutY="310.0" mnemonicParsing="false" onAction="#validate" style="-fx-background-color: #BA68C8;" text="Validate Key" textFill="#fffdfd" visible="false">
+               <font>
+                  <Font name="System Bold Italic" size="15.0" />
+               </font>
+            </Button>
+            <Button fx:id="clear" layoutX="50.0" layoutY="310.0" mnemonicParsing="false" onAction="#clearAll" style="-fx-background-color: #BA68C8;" text="CLEAR" textFill="#f5f5f5">
+               <font>
+                  <Font name="System Bold Italic" size="15.0" />
+               </font>
+            </Button>
+            <Button fx:id="mChart" layoutX="1030.0" layoutY="259.0" mnemonicParsing="false" onAction="#memoryChart" style="-fx-background-color: #BA68C8;" text="Memory" textFill="WHITE">
+               <font>
+                  <Font name="System Bold" size="15.0" />
+               </font>
+            </Button>
+            <Button fx:id="cpu" layoutX="1028.0" layoutY="310.0" mnemonicParsing="false" onAction="#cpuChart" prefHeight="31.0" prefWidth="80.0" style="-fx-background-color: #BA68C8;" text="Cpu" textFill="WHITE">
+               <font>
+                  <Font name="System Bold" size="15.0" />
+               </font>
+            </Button>
+            <AnchorPane layoutX="-10.0" layoutY="-12.0" prefHeight="110.0" prefWidth="1146.0" style="-fx-background-color: #881798;" AnchorPane.bottomAnchor="602.0" AnchorPane.leftAnchor="-10.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="-12.0">
+               <children>
+                  <Label layoutX="303.0" layoutY="7.0" lineSpacing="2.0" prefHeight="91.0" prefWidth="593.0" text="CIPHER APPLICATION" textAlignment="CENTER" textFill="WHITE" textOverrun="CENTER_ELLIPSIS" underline="true">
+                     <font>
+                        <Font name="Berlin Sans FB Bold" size="51.0" />
+                     </font>
+                  </Label>
+               </children>
+            </AnchorPane>
          </children>
       </AnchorPane>
    </children>
-</GridPane>
+</AnchorPane>

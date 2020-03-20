@@ -13,7 +13,7 @@ public class VigenereCipher {
         BufferedReader f1 = new BufferedReader(new FileReader("vigenere"));
 
 
-        String texts = f1.readLine();
+        String texts = f1.readLine().toLowerCase();
 
 
         String[] words = texts.split(" ");

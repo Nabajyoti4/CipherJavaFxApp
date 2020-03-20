@@ -12,7 +12,7 @@ public class VernamCipher {
         BufferedReader f1 = new BufferedReader(new FileReader("vernam"));
 
 
-        String text = f1.readLine();
+        String text = f1.readLine().toLowerCase();
 
 
         for (int i = 0; i< text.length(); i++){
