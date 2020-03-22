@@ -14,7 +14,7 @@ public class PlayCipher {
     //Function for encryption
     public String encryption(String text) throws IOException {
 
-        File file = new File("play");
+        File file = new File("play.txt");
 
         FileWriter f1 = new FileWriter(file,false);
 

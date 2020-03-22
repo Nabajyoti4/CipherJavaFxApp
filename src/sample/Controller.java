@@ -14,6 +14,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 import sample.*;
@@ -27,6 +28,8 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.lang.management.ManagementFactory;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import javafx.fxml.FXML;
 
@@ -42,6 +45,7 @@ public class Controller {
     public Button debtn;
     public RadioButton hill,play,vign,vern;
     public Button valikey;
+    public ToggleGroup ciphers1;
 
     /*
      * Cpu usage variables
@@ -50,7 +54,15 @@ public class Controller {
     public double hillMemory = 0,playMemory = 0,vigMemory = 0,verMemory = 0;
     public double hillCpu = 0,playCpu = 0,vigCpu = 0 ,verCpu = 0;
 
+    /*
+     * key validate boolean
+     */
+    boolean hillKeyValidation  = false;
 
+
+    /*
+     * Instance of all the classes to be used
+     */
 
     //hill cipher class instance
     private HillCipher hillCipher = new HillCipher();
@@ -71,6 +83,8 @@ public class Controller {
     private Performance performance = new Performance();
 
 
+    //Alert class
+    private Alerts alerts = new Alerts();
 
     /* method to check which radio button is selected */
     public void cipher(ActionEvent actionEvent){
@@ -80,7 +94,7 @@ public class Controller {
             System.out.println("hill");
             valikey.setVisible(true);
             keytext.setEditable(true);
-            JOptionPane.showMessageDialog(null, "Hill selected Enter A key of 2 X 2 matrix");
+            alerts.alert1("Hill Cipher","Give a key of matrix 2 x 2 and validate the key");
 
         }
 
@@ -89,7 +103,7 @@ public class Controller {
             System.out.println("play");
             valikey.setVisible(false);
             keytext.setEditable(true);
-            JOptionPane.showMessageDialog(null, "Play Selected Enter A key");
+            alerts.alert1("Play Cipher","Enter key and plaintext");
 
         }
 
@@ -99,7 +113,7 @@ public class Controller {
             System.out.println("vigenere");
             valikey.setVisible(false);
             keytext.setEditable(true);
-            JOptionPane.showMessageDialog(null, "Vigenere Selected Enter A key");
+            alerts.alert1("Vigenere Cipher","Enter key and plain text");
 
         }
 
@@ -109,7 +123,7 @@ public class Controller {
             System.out.println("Vernam");
             valikey.setVisible(false);
             keytext.setEditable(true);
-            JOptionPane.showMessageDialog(null, "Vernam Selected Enter A key");
+            alerts.alert1("Vernam Cipher","Enter key and plain text of same length");
 
         }
 
@@ -119,33 +133,42 @@ public class Controller {
     /* validate key button */
     @FXML
     public void validate(ActionEvent actionEvent){
+
+
                 String key = keytext.getText().toLowerCase();
 
 
-                //return true if key is accepted
-                // returns false if key is not inversible or smaller
-                if(hillCipher.keyGenrate(key)){
-                    hillMemory = 0;
-                    JOptionPane.showMessageDialog(null, "Key Succesfully Accepted Enter plain Text");
+                if(checkKey()){
+                    //return true if key is accepted
+                    // returns false if key is not inversible or smaller
+                    if(hillCipher.keyGenrate(key)){
+                        hillMemory = 0;
+                        alerts.alert1("Key Accepted", "Key Succesfully Accepted Enter plain Text");
 
-                    //enable plain text field to enter the plain text
-                    pltext.setEditable(true);
+                        //enable plain text field to enter the plain text
+                        pltext.setEditable(true);
+                        hillKeyValidation = true;
 
-                }else{
-                    //if key is not accepted renter again
-                    JOptionPane.showMessageDialog(null, "Key cannot be used re-enter");
+                    }else{
+                        //if key is not accepted renter again
+                        alerts.warning("Key Error", "Key cannot be used re-enter");
+                        hillKeyValidation = false;
+                    }
+
+                    /*
+                     * return total memory usage in MB
+                     */
+                    hillMemory = hillMemory + performance.checkMemory();
+                    System.out.println(hillMemory);
+
+
+
+                    hillCpu =  hillCpu + performance.cpuUsage();
                 }
 
-                /*
-                 * return total memory usage in MB
-                 */
-                 hillMemory = hillMemory + performance.checkMemory();
-                 System.out.println(hillMemory);
 
 
 
-
-                hillCpu =  hillCpu + performance.cpuUsage();
 
     }
 
@@ -155,128 +178,166 @@ public class Controller {
     @FXML
     public void enbtn() throws IOException {
 
-        //////////////////// ENCRYPTION FOR HILL CIPHER //////////////////////////////
-        if(hill.isSelected()){
-
-
-
-            //send the plain text and key to hill class
-            String plainText = pltext.getText().toLowerCase();
-
-
-            //call encrypt method to encrypt plain text
-            //returns cipher text
-            String cipherText = hillCipher.encryptText(plainText);
-
-            //store encrypt text in encrypt field
-            enText.setText(cipherText);
-
-            //show message
-            JOptionPane.showMessageDialog(null, "Message succesfully encrypted");
-
-            hillMemory = hillMemory + performance.checkMemory();
-            System.out.println(hillMemory);
-
-
-
-
-            hillCpu =  hillCpu + performance.cpuUsage();
-
-
+        //if not plain text found in field
+        // error message
+        if (pltext.getText().isEmpty()){
+            alerts.warning("Plain Text Not found", "Enter Plain text To Encrypt");
         }
+        else{
+            //////////////////// ENCRYPTION FOR HILL CIPHER //////////////////////////////
+            if(hill.isSelected()){
+                if(hillKeyValidation){
 
+                    //send the plain text and key to hill class
+                    String plainText = pltext.getText().toLowerCase();
 
-        /////////////////////// ENCRYPTION FORM PLAY CIPHER /////////////////////////////
-        if(play.isSelected()){
+                    //call encrypt method to encrypt plain text
+                    //returns cipher text
+                    String cipherText = hillCipher.encryptText(plainText);
 
+                    //store encrypt text in encrypt field
+                    enText.setText(cipherText);
 
+                    //show message
+                    alerts.alert1("Encryption Done", "Message Succesfully encrypted and stored in file hill.txt");
 
-
-            System.out.println("play");
-
-            //take the key from text box
-            String key = keytext.getText().toLowerCase();
-
-            //Send the key to the play cipher to genrate the play cipher table
-            playCipher.keyGenerate(key);
-
-
-
-            //Take the plain text from the plain text box
-            String plainText = pltext.getText().toLowerCase();
-
-
-            //Send the plainText for encryption
-            //returns the cipher text
-            String cipherText = playCipher.encryption(plainText);
-
-            //display the cipher text in encrypt box
-            enText.setText(cipherText);
-
-
-            playMemory = playMemory +  performance.checkMemory();
+                    hillMemory = hillMemory + performance.checkMemory();
+                    System.out.println(hillMemory);
 
 
 
-            playCpu =  playCpu + performance.cpuUsage();
+
+                    hillCpu =  hillCpu + performance.cpuUsage();
+
+                    debtn.setDisable(false);
 
 
-        }
+                }else{
+                    alerts.warning("Key Validation Error", "Validate Key First to Encrypt Text");
+                }
 
 
-        /////////////////////// ENCRYPTION FORM VIGENERE CIPHER/////////////////////////////
-        if(vign.isSelected()){
-
-
-
-            String key = keytext.getText().toLowerCase();
-
-            String text = pltext.getText().toLowerCase();
-
-            String cipherText = vigenereCipher.encrypt(key,text);
-
-            enText.setText(cipherText);
-
-
-            vigMemory = vigMemory + performance.checkMemory();
-
-
-            vigCpu =  vigCpu + performance.cpuUsage();
-
-        }
-
-
-        /////////////////////// ENCRYPTION FORM VERNAM CIPHER /////////////////////////////
-        if(vern.isSelected()){
-
-
-
-            String key = keytext.getText().toLowerCase();
-
-            String plainText = pltext.getText().toLowerCase();
-
-            //if key length is not equal to word
-            if (key.length() != plainText.length()){
-                JOptionPane.showMessageDialog(null,"Key length be equal to Word");
-            }
-            else{
-
-                String cipherText = vernamCipher.encrypt(plainText,key);
-
-                enText.setText(cipherText);
-                verMemory = verMemory + performance.checkMemory();
-
-
-
-                verCpu =  verCpu + performance.cpuUsage();
             }
 
 
+            /////////////////////// ENCRYPTION FORM PLAY CIPHER /////////////////////////////
+            if(play.isSelected()){
+
+                if(checkKey()){
+
+                    System.out.println("play");
+
+                    //take the key from text box
+                    String key = keytext.getText().toLowerCase();
+
+                    //Send the key to the play cipher to genrate the play cipher table
+                    playCipher.keyGenerate(key);
 
 
 
+                    //Take the plain text from the plain text box
+                    String plainText = pltext.getText().toLowerCase();
+
+
+                    //Send the plainText for encryption
+                    //returns the cipher text
+                    String cipherText = playCipher.encryption(plainText);
+
+                    //display the cipher text in encrypt box
+                    enText.setText(cipherText);
+
+
+
+                    debtn.setDisable(false);
+
+
+                    playMemory = playMemory +  performance.checkMemory();
+
+
+
+                    playCpu =  playCpu + performance.cpuUsage();
+
+                    //show message
+                    alerts.alert1("Encryption Done", "Message Succesfully encrypted and stored in file play.txt");
+                }
+
+
+
+            }
+
+
+            /////////////////////// ENCRYPTION FORM VIGENERE CIPHER/////////////////////////////
+            if(vign.isSelected()){
+
+
+                if(checkKey()){
+                    String key = keytext.getText().toLowerCase();
+
+                    String text = pltext.getText().toLowerCase();
+
+                    String cipherText = vigenereCipher.encrypt(key,text);
+
+                    enText.setText(cipherText);
+
+                    //show message
+                    alerts.alert1("Encryption Done", "Message Succesfully encrypted and stored in file vig.txt");
+
+
+
+                    debtn.setDisable(false);
+
+
+                    vigMemory = vigMemory + performance.checkMemory();
+
+
+                    vigCpu =  vigCpu + performance.cpuUsage();
+                }
+
+
+
+            }
+
+
+            /////////////////////// ENCRYPTION FORM VERNAM CIPHER /////////////////////////////
+            if(vern.isSelected()){
+
+                 if(checkKey()){
+                     String key = keytext.getText().toLowerCase();
+
+                     String plainText = pltext.getText().toLowerCase();
+
+                     //if key length is not equal to word
+                     if (key.length() != plainText.length()){
+                         //show message
+                         alerts.warning("Key length not match", "key Length Must be equal to text");
+                     }
+                     else{
+
+                         String cipherText = vernamCipher.encrypt(plainText,key);
+
+                         enText.setText(cipherText);
+
+                         //show message
+                         alerts.alert1("Encryption Done", "Message Succesfully encrypted and stored in file ver.txt");
+
+
+                         debtn.setDisable(false);
+
+                         verMemory = verMemory + performance.checkMemory();
+
+
+
+                         verCpu =  verCpu + performance.cpuUsage();
+                     }
+
+
+                 }
+
+
+            }
 
         }
+
 
     }
 
@@ -289,32 +350,37 @@ public class Controller {
 
         /////////////////// FOR HILL CIPHER ////////////////////////////////
         if(hill.isSelected()){
+            if (hillKeyValidation){
+                //Read the data from file
+                BufferedReader f2 = new BufferedReader(new FileReader("hill.txt"));
 
 
-            //Read the data from file
-            BufferedReader f2 = new BufferedReader(new FileReader("hill"));
+                //Store the data in a variable
+                //store the text in a words string
+                String words =  f2.readLine().toLowerCase();
 
 
-            //Store the data in a variable
-            //store the text in a words string
-            String words =  f2.readLine().toLowerCase();
+                //Send the data to hill decrypt method for decryption
+                //returns normal text
+                String decryptText  = hillCipher.decryptCipher(words);
 
 
-            //Send the data to hill decrypt method for decryption
-            //returns normal text
-            String decryptText  = hillCipher.decryptCipher(words);
+                //Store the text in decrypt textfield
+                detext.setText(decryptText);
 
-
-            //Store the text in decrypt textfield
-            detext.setText(decryptText);
-
-            // get memory usage
-            hillMemory = hillMemory + performance.checkMemory();
-            System.out.println(hillMemory);
+                // get memory usage
+                hillMemory = hillMemory + performance.checkMemory();
+                System.out.println(hillMemory);
 
 
 
-            hillCpu =  hillCpu + performance.cpuUsage();
+                hillCpu =  hillCpu + performance.cpuUsage();
+            }else{
+                alerts.warning("Key Validation Error", "Validate Key First to Encrypt Text");
+            }
+
+
+
 
         }
 
@@ -326,7 +392,7 @@ public class Controller {
 
 
             //Read the data from file
-            BufferedReader f2 = new BufferedReader(new FileReader("play"));
+            BufferedReader f2 = new BufferedReader(new FileReader("play.txt"));
 
 
             //Store the data in a variable
@@ -395,6 +461,19 @@ public class Controller {
 
     }
 
+    /*
+     * Check for mouse event to restrict input of plain text
+     * if no key is given in key box
+     * if empty not plain tet can be entered
+     */
+    public void emptyKey(MouseEvent mouseEvent) {
+        if(keytext.getText().isEmpty()){
+            alerts.warning("Key Not Found", " Enter Key Or choose Cipher to proceed with encryption and decryption");
+        }else{
+            pltext.setEditable(true);
+        }
+    }
+
 
 
     // Function to clear all field
@@ -403,6 +482,10 @@ public class Controller {
         enText.setText("");
         pltext.setText("");
         detext.setText("");
+        hill.setSelected(false);
+        play.setSelected(false);
+        vern.setSelected(false);
+        vign.setSelected(false);
 
 
     }
@@ -450,5 +533,26 @@ public class Controller {
             System.out.println("IO ex : " + io.getMessage());
         }
     }
+
+
+    /*
+     * check if there is any speacial charters or numbers are there in key
+     */
+    public boolean checkKey(){
+        String key = keytext.getText();
+
+        Pattern p = Pattern.compile("[^A-Za-z]");
+        Matcher m = p.matcher(key);
+
+        if(m.find()){
+            alerts.warning("Key error", "Key with numbers and special characters are not allowed");
+            return false;
+        }
+        return true;
+
+
+    }
+
+
 
 }

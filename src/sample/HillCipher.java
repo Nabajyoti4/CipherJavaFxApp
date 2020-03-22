@@ -66,7 +66,7 @@ public class HillCipher {
 
         keyMatrixDisplay(keyMatrix);
 
-        File file = new File("hill");
+        File file = new File("hill.txt");
 
         file.createNewFile();
 

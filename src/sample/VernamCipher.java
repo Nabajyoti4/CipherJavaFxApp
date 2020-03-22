@@ -9,7 +9,7 @@ public class VernamCipher {
         String plainText = "";
 
 
-        BufferedReader f1 = new BufferedReader(new FileReader("vernam"));
+        BufferedReader f1 = new BufferedReader(new FileReader("vernam.txt"));
 
 
         String text = f1.readLine().toLowerCase();
@@ -35,7 +35,7 @@ public class VernamCipher {
 
 
 
-        File file = new File("vernam");
+        File file = new File("vernam.txt");
 
 
         FileWriter f1 = new FileWriter(file);

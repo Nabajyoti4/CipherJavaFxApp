@@ -10,7 +10,7 @@ public class VigenereCipher {
         String plainText = "";
 
 
-        BufferedReader f1 = new BufferedReader(new FileReader("vigenere"));
+        BufferedReader f1 = new BufferedReader(new FileReader("vigenere.txt"));
 
 
         String texts = f1.readLine().toLowerCase();
@@ -50,7 +50,7 @@ public class VigenereCipher {
 
     public String encrypt(String key,String text) throws IOException {
 
-        File file = new File("vigenere");
+        File file = new File("vigenere.txt");
 
 
         FileWriter f1 = new FileWriter(file);

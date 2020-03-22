@@ -1,5 +1,10 @@
 package sample;
-
+/*
+ * class contains methods for
+ * checking cpu usage
+ * checking memory usage
+ * Both functions returns the usage
+ */
 import com.sun.management.OperatingSystemMXBean;
 
 import java.lang.management.ManagementFactory;
