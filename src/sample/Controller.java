@@ -178,39 +178,42 @@ public class Controller {
     @FXML
     public void enbtn() throws IOException {
 
-        //if not plain text found in field
+        //if no plain text found in field
         // error message
         if (pltext.getText().isEmpty()){
             alerts.warning("Plain Text Not found", "Enter Plain text To Encrypt");
         }
+
+        // else start encryption
         else{
             //////////////////// ENCRYPTION FOR HILL CIPHER //////////////////////////////
             if(hill.isSelected()){
                 if(hillKeyValidation){
-
                     //send the plain text and key to hill class
                     String plainText = pltext.getText().toLowerCase();
 
-                    //call encrypt method to encrypt plain text
-                    //returns cipher text
-                    String cipherText = hillCipher.encryptText(plainText);
+                    //check for wrong input in plain text
+                    if(checkPlainText(plainText)){
 
-                    //store encrypt text in encrypt field
-                    enText.setText(cipherText);
+                        //call encrypt method to encrypt plain text
+                        //returns cipher text
+                        String cipherText = hillCipher.encryptText(plainText);
 
-                    //show message
-                    alerts.alert1("Encryption Done", "Message Succesfully encrypted and stored in file hill.txt");
+                        //store encrypt text in encrypt field
+                        enText.setText(cipherText);
 
-                    hillMemory = hillMemory + performance.checkMemory();
-                    System.out.println(hillMemory);
+                        //show message
+                        alerts.alert1("Encryption Done", "Message Succesfully encrypted and stored in file hill.txt");
+
+                        hillMemory = hillMemory + performance.checkMemory();
+                        System.out.println(hillMemory);
 
 
 
+                        hillCpu =  hillCpu + performance.cpuUsage();
 
-                    hillCpu =  hillCpu + performance.cpuUsage();
-
-                    debtn.setDisable(false);
-
+                        debtn.setDisable(false);
+                    }
 
                 }else{
                     alerts.warning("Key Validation Error", "Validate Key First to Encrypt Text");
@@ -223,42 +226,51 @@ public class Controller {
             /////////////////////// ENCRYPTION FORM PLAY CIPHER /////////////////////////////
             if(play.isSelected()){
 
+                // check for wrong input in key
                 if(checkKey()){
 
-                    System.out.println("play");
-
-                    //take the key from text box
-                    String key = keytext.getText().toLowerCase();
-
-                    //Send the key to the play cipher to genrate the play cipher table
-                    playCipher.keyGenerate(key);
-
-
-
-                    //Take the plain text from the plain text box
                     String plainText = pltext.getText().toLowerCase();
 
+                    if (checkPlainText(plainText)){
 
-                    //Send the plainText for encryption
-                    //returns the cipher text
-                    String cipherText = playCipher.encryption(plainText);
+                        System.out.println("play");
 
-                    //display the cipher text in encrypt box
-                    enText.setText(cipherText);
-
+                        //take the key from text box
+                        String key = keytext.getText().toLowerCase();
 
 
-                    debtn.setDisable(false);
-
-
-                    playMemory = playMemory +  performance.checkMemory();
+                        //Send the key to the play cipher to genrate the play cipher table
+                        playCipher.keyGenerate(key);
 
 
 
-                    playCpu =  playCpu + performance.cpuUsage();
+                        //Take the plain text from the plain text box
 
-                    //show message
-                    alerts.alert1("Encryption Done", "Message Succesfully encrypted and stored in file play.txt");
+
+
+                        //Send the plainText for encryption
+                        //returns the cipher text
+                        String cipherText = playCipher.encryption(plainText);
+
+                        //display the cipher text in encrypt box
+                        enText.setText(cipherText);
+
+
+
+                        debtn.setDisable(false);
+
+
+                        playMemory = playMemory +  performance.checkMemory();
+
+
+
+                        playCpu =  playCpu + performance.cpuUsage();
+
+                        //show message
+                        alerts.alert1("Encryption Done", "Message Succesfully encrypted and stored in file play.txt");
+                    }
+
+
                 }
 
 
@@ -269,28 +281,32 @@ public class Controller {
             /////////////////////// ENCRYPTION FORM VIGENERE CIPHER/////////////////////////////
             if(vign.isSelected()){
 
-
                 if(checkKey()){
+
                     String key = keytext.getText().toLowerCase();
 
                     String text = pltext.getText().toLowerCase();
 
-                    String cipherText = vigenereCipher.encrypt(key,text);
+                    if(checkPlainText(text)){
+                        String cipherText = vigenereCipher.encrypt(key,text);
 
-                    enText.setText(cipherText);
+                        enText.setText(cipherText);
 
-                    //show message
-                    alerts.alert1("Encryption Done", "Message Succesfully encrypted and stored in file vig.txt");
-
-
-
-                    debtn.setDisable(false);
+                        //show message
+                        alerts.alert1("Encryption Done", "Message Succesfully encrypted and stored in file vig.txt");
 
 
-                    vigMemory = vigMemory + performance.checkMemory();
+
+                        debtn.setDisable(false);
 
 
-                    vigCpu =  vigCpu + performance.cpuUsage();
+                        vigMemory = vigMemory + performance.checkMemory();
+
+
+                        vigCpu =  vigCpu + performance.cpuUsage();
+                    }
+
+
                 }
 
 
@@ -302,32 +318,36 @@ public class Controller {
             if(vern.isSelected()){
 
                  if(checkKey()){
-                     String key = keytext.getText().toLowerCase();
+
 
                      String plainText = pltext.getText().toLowerCase();
 
-                     //if key length is not equal to word
-                     if (key.length() != plainText.length()){
-                         //show message
-                         alerts.warning("Key length not match", "key Length Must be equal to text");
-                     }
-                     else{
+                     if (checkPlainText(plainText)){
 
-                         String cipherText = vernamCipher.encrypt(plainText,key);
+                         String key = keytext.getText().toLowerCase();
+                         //if key length is not equal to word
+                         if (key.length() != plainText.length()){
+                             //show message
+                             alerts.warning("Key length not match", "key Length Must be equal to text");
+                         }
+                         else{
 
-                         enText.setText(cipherText);
+                             String cipherText = vernamCipher.encrypt(plainText,key);
 
-                         //show message
-                         alerts.alert1("Encryption Done", "Message Succesfully encrypted and stored in file ver.txt");
+                             enText.setText(cipherText);
 
-
-                         debtn.setDisable(false);
-
-                         verMemory = verMemory + performance.checkMemory();
+                             //show message
+                             alerts.alert1("Encryption Done", "Message Succesfully encrypted and stored in file ver.txt");
 
 
+                             debtn.setDisable(false);
 
-                         verCpu =  verCpu + performance.cpuUsage();
+                             verMemory = verMemory + performance.checkMemory();
+
+
+
+                             verCpu =  verCpu + performance.cpuUsage();
+                         }
                      }
 
 
@@ -341,6 +361,37 @@ public class Controller {
 
     }
 
+    /*
+     * check for speacial characters and numbers in the plain text
+     * return true if not found any
+     * return false if found
+     */
+    private boolean checkPlainText(String text) {
+
+        String[] wordList = text.split(" ");
+
+        if(vern.isSelected()){ // check if the plain text have more than one word in vernam
+            if(wordList.length > 1){
+                alerts.warning("Plain Text Too Long", "Plain text For vernam must be only one word for now");
+                return false;
+            }
+            return true;
+        }else{
+            for (String word : wordList){
+
+                Pattern p = Pattern.compile("[^A-Za-z]");
+                Matcher m = p.matcher(word);
+
+                if(m.find()){
+                    alerts.warning("Plain Text Error", "Plain text with numbers and special characters are not allowed Re enter");
+                    return false;
+                }
+                return true;
+            }
+        }
+
+        return false;
+    }
 
 
     //decrypt button function
@@ -482,6 +533,7 @@ public class Controller {
         enText.setText("");
         pltext.setText("");
         detext.setText("");
+        keytext.setText("");
         hill.setSelected(false);
         play.setSelected(false);
         vern.setSelected(false);

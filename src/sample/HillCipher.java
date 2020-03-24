@@ -14,48 +14,48 @@ public class HillCipher {
     public boolean keyGenrate(String key) {
 
 
-            // if key value length is 4 break the loop
-            if (key.length() == 4) {
+        // if key value length is 4 break the loop
+        if (key.length() == 4) {
 
-                //create a matrix of 2 x 2 with the unicode value of each char
-                int k = 0;
-                for (int  i = 0;i<2;i++){
-                    for (int j = 0;j<2;j++){
-                        keyMatrix[i][j] = key.charAt(k) - 97;
-                        k++;
-                    }
+            //create a matrix of 2 x 2 with the unicode value of each char
+            int k = 0;
+            for (int  i = 0;i<2;i++){
+                for (int j = 0;j<2;j++){
+                    keyMatrix[i][j] = key.charAt(k) - 97;
+                    k++;
                 }
+            }
 
-                //dispaly keymatrix
+            //dispaly keymatrix
+            keyMatrixDisplay(keyMatrix);
+
+
+            // check the determinant if it is greater then zero or not
+            int determinant = ( keyMatrix[0][0] * keyMatrix[1][1] ) - ( keyMatrix[0][1] * keyMatrix[1][0] );
+            System.out.println(determinant);
+
+
+
+            //check for multiplicative inverse
+            BigInteger biginteger1, biginteger2,result=null;
+
+            // Initialize all BigInteger Objects
+            biginteger1 = new BigInteger(String.valueOf(determinant));
+            biginteger2 = new BigInteger(String.valueOf(26));
+
+            // perform modInverse operation on biginteger1 using biginteger2.
+            try {
+                result = biginteger1.modInverse(biginteger2);
+                System.out.println("Multiplicative inverse "+ result);
                 keyMatrixDisplay(keyMatrix);
+                return true;
+            }catch (ArithmeticException e){
+                System.out.println("Not invertable Enter key again");
+                return false;
+            }
 
 
-                // check the determinant if it is greater then zero or not
-                int determinant = ( keyMatrix[0][0] * keyMatrix[1][1] ) - ( keyMatrix[0][1] * keyMatrix[1][0] );
-                System.out.println(determinant);
-
-
-
-                //check for multiplicative inverse
-                BigInteger biginteger1, biginteger2,result=null;
-
-                // Initialize all BigInteger Objects
-                biginteger1 = new BigInteger(String.valueOf(determinant));
-                biginteger2 = new BigInteger(String.valueOf(26));
-
-                // perform modInverse operation on biginteger1 using biginteger2.
-                try {
-                    result = biginteger1.modInverse(biginteger2);
-                    System.out.println("Multiplicative inverse "+ result);
-                    keyMatrixDisplay(keyMatrix);
-                    return true;
-                }catch (ArithmeticException e){
-                    System.out.println("Not invertable Enter key again");
-                    return false;
-                }
-
-
-            }//end of if length condition
+        }//end of if length condition
 
         return false;
     }
